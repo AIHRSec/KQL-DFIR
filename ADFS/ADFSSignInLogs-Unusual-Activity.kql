@@ -4,7 +4,8 @@
 // This let statement looks for IPs that have attempted to sign into one or more identities
 let A = (
     ADFSSignInLogs
-    | summarize Total_IDs = count() by IPAddress, AlternateSignInName
+    | distinct AlternateSignInName,IPAddress
+    | summarize IDs = make_set(AlternateSignInName),Total_IDs = count() by IPAddress
     | where Total_IDs > 1 // This could be increase to reduce false positives
     | project IPAddress
     );
